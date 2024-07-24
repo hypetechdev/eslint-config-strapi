@@ -1,0 +1,36 @@
+{
+    "name": "@hypetech/eslint-config-strapi",
+    "version": "1.0.0",
+    "description": "ESlint configuration for Strapi based projects according to HypeTech Coding Standards",
+    "keywords": [
+        "HypeTech",
+        "eslint",
+        "strapi",
+        "eslint-config-strapi"
+    ],
+    "homepage": "https://github.com/hypetechdev/eslint-config-strapi#readme",
+    "bugs": {
+        "url": "https://github.com/hypetechdev/eslint-config-strapi/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/hypetechdev/eslint-config-strapi.git"
+    },
+    "license": "MIT",
+    "main": "index.js",
+    "dependencies": {
+        "@typescript-eslint/eslint-plugin": "^7.17.0",
+        "@typescript-eslint/parser": "^7.17.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-import": "^2.29.1",
+        "eslint-plugin-prettier": "^5.2.1",
+        "eslint-plugin-unused-imports": "^3.2.0"
+    },
+    "peerDependencies": {
+        "eslint": ">=8.x",
+        "prettier": ">=3.x"
+    },
+    "publishConfig": {
+        "access": "public"
+    }
+}

@@ -1,0 +1,48 @@
+name: Check Package Version Change
+
+on:
+    pull_request:
+        types: [opened, synchronize] # Trigger on PR creation and updates
+
+jobs:
+    validate-version:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout base branch
+              uses: actions/checkout@v4
+              with:
+                  ref: ${{ github.event.pull_request.base.ref }}
+                  fetch-depth: 0 # Fetch full commit history for accurate version check
+
+            - name: Get previous version
+              run: echo "PREVIOUS_VERSION=$(jq -r '.version' package.json)" >> $GITHUB_ENV
+
+            - name: Checkout PR's head commit
+              uses: actions/checkout@v4
+              with:
+                  ref: ${{ github.event.pull_request.head.sha }} # Fetch latest head SHA
+                  fetch-depth: 0 # Fetch full commit history
+
+            - name: Get current version (PR Branch)
+              run: echo "CURRENT_VERSION=$(jq -r '.version' package.json)" >> $GITHUB_ENV
+
+            - name: Compare Versions
+              run: |
+                  if [ "$CURRENT_VERSION" == "$PREVIOUS_VERSION" ]; then
+                    echo "Error: The version in package.json has not been changed. Please update the version before merging this PR."
+                    exit 1  # Fail the workflow
+                  fi
+
+            - name: PR Review
+              if: failure() # If previous step fails
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      github.rest.pulls.createReview({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        pull_number: context.issue.number,
+                        body: 'Error: The version in package.json has not been changed. Please update the version before merging this PR.',
+                        event: 'REQUEST_CHANGES'
+                      });
